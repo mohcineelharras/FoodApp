@@ -1,0 +1,31 @@
+[project]
+name = "foodapp"
+version = "1.0.0"
+description = "Counter pickup ordering for FoodApp."
+requires-python = ">=3.12"
+dependencies = [
+    "argon2-cffi==25.1.0",
+    "fastapi==0.142.2",
+    "jinja2==3.1.6",
+    "python-multipart==0.0.32",
+    "uvicorn==0.54.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 112
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "S"]
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["foodapp"]

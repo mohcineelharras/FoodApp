@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel narrow">
+  <h1>Account</h1>
+  {% if user %}
+    <p><strong>{{ user.name }}</strong></p>
+    <p>{{ user.email }}</p>
+  {% endif %}
+  <form method="post" action="/logout">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <button type="submit" class="ghost">Sign out</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Your orders</h1>
+</section>
+{% if orders %}
+  <div class="stack">
+    {% for order in orders %}
+      <article class="line">
+        <div>
+          <h2><a href="/orders/{{ order.id }}">Order {{ order.id }}</a></h2>
+          <p>{{ order.status }} · {{ order.created }}</p>
+          <p>{{ order.total }} · {{ order.pickup_name }}</p>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <section class="panel">
+    <h2>No pickup orders yet</h2>
+    <p>When you place one, it will show up here.</p>
+    <a class="button" href="/">Browse the menu</a>
+  </section>
+{% endif %}
+{% endblock %}

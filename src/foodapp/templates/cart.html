@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Your cart</h1>
+</section>
+{% if lines %}
+  <div class="stack">
+    {% for line in lines %}
+      <article class="line">
+        <div>
+          <h2>{{ line.name }}</h2>
+          <p>{{ line.price }} each · {{ line.line_total }}</p>
+          {% if not line.orderable %}<p class="sold">Not enough left to order this quantity.</p>{% endif %}
+        </div>
+        <form method="post" action="/cart/update" class="qty-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <input type="hidden" name="item_id" value="{{ line.id }}">
+          <label for="qty-{{ line.id }}">Quantity</label>
+          <input id="qty-{{ line.id }}" name="qty" type="number" min="1" max="20" value="{{ line.qty }}" inputmode="numeric">
+          <button type="submit">Update</button>
+        </form>
+        <form method="post" action="/cart/remove">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <input type="hidden" name="item_id" value="{{ line.id }}">
+          <button type="submit" class="ghost">Remove</button>
+        </form>
+      </article>
+    {% endfor %}
+  </div>
+  <section class="panel totals">
+    <p>Available dishes total <strong>{{ total }}</strong></p>
+    {% if ready %}
+      <a class="button" href="/checkout">Continue to pickup</a>
+    {% else %}
+      <p>Remove anything we can't cook, then continue.</p>
+    {% endif %}
+  </section>
+{% else %}
+  <section class="panel">
+    <h2>The cart is empty</h2>
+    <p>The menu is still up. Add a dish and it will wait here.</p>
+    <a class="button" href="/">Browse the menu</a>
+  </section>
+{% endif %}
+{% endblock %}

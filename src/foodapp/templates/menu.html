@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Tonight's counter</h1>
+  <p>Choose a dish, then pick it up under your name. The kitchen holds an order for 30 minutes.</p>
+</section>
+<form class="filters" method="get" action="/">
+  <div class="field">
+    <label for="q">Search dishes</label>
+    <input id="q" name="q" type="search" value="{{ search }}" maxlength="80" autocomplete="off">
+  </div>
+  {% if category %}<input type="hidden" name="category" value="{{ category }}">{% endif %}
+  <button type="submit">Search</button>
+</form>
+<nav class="categories" aria-label="Categories">
+  <a href="{{ all_href }}" {% if not category %}aria-current="page"{% endif %}>All</a>
+  {% for name in categories %}
+    <a href="{{ name.href }}" {% if name.selected %}aria-current="page"{% endif %}>{{ name.label }}</a>
+  {% endfor %}
+</nav>
+{% if items %}
+  <div class="grid">
+    {% for item in items %}
+      <article class="dish">
+        <p class="eyebrow">{{ item.category }}{% if item.low %} · Only {{ item.stock }} left{% endif %}</p>
+        <h2>{{ item.name }}</h2>
+        <p>{{ item.description }}</p>
+        <div class="dish-row">
+          <p class="price">{{ item.price }}</p>
+          {% if item.orderable %}
+            <form method="post" action="/cart/add">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="return_to" value="{{ return_to }}">
+              <button type="submit">Add to cart</button>
+            </form>
+          {% elif item.unavailable %}
+            <p class="sold">Not tonight</p>
+          {% else %}
+            <p class="sold">Sold out</p>
+          {% endif %}
+        </div>
+        {% if item.in_cart %}<p class="in-cart">In your cart: {{ item.in_cart }}</p>{% endif %}
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <section class="panel">
+    <h2>Nothing matches</h2>
+    <p>{{ empty_message }}</p>
+    <a class="button" href="/">See the full menu</a>
+  </section>
+{% endif %}
+{% endblock %}

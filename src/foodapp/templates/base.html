@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{{ title }} · FoodApp</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <a class="skip" href="#content">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/">
+      <span class="brand-mark">FoodApp</span>
+      <span class="brand-sub">Counter pickup</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="/" {% if active == "menu" %}aria-current="page"{% endif %}>Menu</a>
+      <a href="/cart" {% if active == "cart" %}aria-current="page"{% endif %}>
+        Cart{% if cart_count %}<span class="count">{{ cart_count }}</span>{% endif %}
+      </a>
+      {% if user %}
+        <a href="/orders" {% if active == "orders" %}aria-current="page"{% endif %}>Orders</a>
+        <a href="/account" {% if active == "account" %}aria-current="page"{% endif %}>{{ user.name }}</a>
+      {% else %}
+        <a href="/login">Sign in</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main id="content">
+    {% if flash %}<p class="flash" role="status">{{ flash }}</p>{% endif %}
+    {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <p>Pickup at the counter. FoodApp does not collect card numbers.</p>
+  </footer>
+</body>
+</html>
