@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Order {{ order.id }}</h1>
+  <p>{{ order.status }} · {{ order.created }}</p>
+</section>
+<div class="stack">
+  {% for item in order["items"] %}
+    <article class="line">
+      <div>
+        <h2>{{ item.qty }} × {{ item.name }}</h2>
+        <p>{{ item.line_total }}</p>
+      </div>
+    </article>
+  {% endfor %}
+</div>
+<section class="panel">
+  <p>Pickup name <strong>{{ order.pickup_name }}</strong></p>
+  <p>Total due at the counter <strong>{{ order.total }}</strong></p>
+  {% if order.note %}
+    <h2>Note</h2>
+    <p class="note">{{ order.note }}</p>
+  {% endif %}
+  <a class="button" href="/orders">All orders</a>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="intro">
+  <h1>Pickup order</h1>
+  <p>We'll call this name at the counter. No payment is taken here.</p>
+</section>
+{% if not lines %}
+  <section class="panel">
+    <h2>Nothing to check out</h2>
+    <p>Add a dish before placing a pickup order.</p>
+    <a class="button" href="/">Browse the menu</a>
+  </section>
+{% else %}
+  <div class="stack">
+    {% for line in lines %}
+      <article class="line">
+        <div>
+          <h2>{{ line.qty }} × {{ line.name }}</h2>
+          <p>{{ line.line_total }}</p>
+          {% if not line.orderable %}<p class="sold">This quantity is no longer available.</p>{% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+  <section class="panel">
+    <p>Total due at the counter <strong>{{ total }}</strong></p>
+    {% if not user %}
+      <p>Sign in so we know who to call.</p>
+      <a class="button" href="/login?next=/checkout">Sign in to place this order</a>
+      <a class="text-link" href="/register?next=/checkout">Create an account</a>
+    {% elif ready %}
+      <form method="post" action="/checkout" class="stack-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="checkout_nonce" value="{{ nonce }}">
+        <div class="field">
+          <label for="pickup_name">Pickup name</label>
+          <input id="pickup_name" name="pickup_name" required maxlength="60" value="{{ pickup_name }}" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="note">Note for the kitchen</label>
+          <textarea id="note" name="note" maxlength="280" rows="3"></textarea>
+        </div>
+        <button type="submit">Place pickup order</button>
+      </form>
+    {% else %}
+      <p>The cart changed. Review it before ordering.</p>
+      <a class="button" href="/cart">Back to cart</a>
+    {% endif %}
+  </section>
+{% endif %}
+{% endblock %}
