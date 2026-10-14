@@ -5,7 +5,7 @@ description = "Counter pickup ordering for FoodApp."
 requires-python = ">=3.12"
 dependencies = [
     "argon2-cffi==25.1.0",
-    "fastapi==0.142.2",
+    "fastapi==0.143.0",
     "jinja2==3.1.6",
     "python-multipart==0.0.32",
     "uvicorn==0.54.0",
